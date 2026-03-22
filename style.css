@@ -278,7 +278,7 @@ body {
   .main { padding: 16px 12px 60px; }
   .header-inner { padding: 0 12px; gap: 6px; }
   .logo-icon { font-size: 20px; }
-  .logo-text { font-size: 15px; display: none; /* Hide text on very small screens to save space */ }
+  .logo-text { font-size: 15px; }
   .card { padding: 20px 16px; }
   
   /* Shrink header buttons on mobile */
