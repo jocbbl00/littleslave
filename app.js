@@ -4,7 +4,7 @@
 
 // ─── CONFIG ─────────────────────────────
 // After deploying the Apps Script, paste the Web App URL here:
-const API_URL = 'https://script.google.com/macros/s/AKfycbzFz9N8ypxhEXqZElE5-MOy9uezcMZwc5jsxWqoqWR-wcCKafm_xQE_n_vHkj3YjhVRxQ/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbwyZlH45pzJ86FZ5MdsRRZA5dvtlB2yt6Xhh2N61tuBhAIC_lM6EHZqqEfLn3ErfGbQ0w/exec';
 
 const USERS = { A: 'Yarin', B: 'Cat' };
 
