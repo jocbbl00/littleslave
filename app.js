@@ -14,6 +14,7 @@ let currentFilter = 'all';
 let currentPayer = USERS.A;
 let currentSplit = 'equal';
 let isLoading = false;
+let editingId = null;
 
 // ─── DOM refs ───────────────────────────
 const form = document.getElementById('expenseForm');
@@ -30,6 +31,9 @@ const catPaidEl = document.getElementById('catPaid');
 const historyBadge = document.getElementById('historyBadge');
 const expensePreview = document.getElementById('expensePreview');
 const previewText = document.getElementById('previewText');
+const submitBtnText = document.getElementById('submitBtnText');
+const cancelEditBtn = document.getElementById('cancelEditBtn');
+const formTitle = document.getElementById('formTitle');
 const exportBtn = document.getElementById('exportBtn');
 const clearBtn = document.getElementById('clearBtn');
 const modalOverlay = document.getElementById('modalOverlay');
@@ -94,6 +98,22 @@ document.querySelectorAll('.split-option').forEach(opt => {
 amountInput.addEventListener('input', updatePreview);
 descInput.addEventListener('input', updatePreview);
 
+function resetForm() {
+  editingId = null;
+  form.reset();
+  dateInput.value = todayISO();
+  expensePreview.style.display = 'none';
+  selectedEmoji = '';
+  document.querySelectorAll('.cat-pick-btn').forEach(b => b.classList.remove('active'));
+  cancelEditBtn.style.display = 'none';
+  submitBtnText.textContent = 'Add Expense';
+  formTitle.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>\n            Add Expense`;
+}
+
+if (cancelEditBtn) {
+  cancelEditBtn.addEventListener('click', () => { resetForm(); renderAll(); });
+}
+
 form.addEventListener('submit', async e => {
   e.preventDefault();
   const desc = descInput.value.trim();
@@ -113,22 +133,29 @@ form.addEventListener('submit', async e => {
     amountOwed: currentSplit === 'equal' ? +(amount / 2).toFixed(2) : +amount.toFixed(2),
   };
 
-  // Optimistic UI update
-  expenses.unshift(expense);
-  renderAll();
-  form.reset();
-  dateInput.value = todayISO();
-  expensePreview.style.display = 'none';
-  // Reset category picker
-  selectedEmoji = '';
-  document.querySelectorAll('.cat-pick-btn').forEach(b => b.classList.remove('active'));
-  showToast(`✅ "${desc}" added`);
-
-  // Persist to Google Sheets
-  try {
-    await apiPost({ action: 'add', ...expense });
-  } catch (err) {
-    showToast('⚠️ Saved locally but failed to sync. Check your connection.');
+  if (editingId) {
+    expense.id = editingId;
+    const idx = expenses.findIndex(e => String(e.id) === String(editingId));
+    if (idx !== -1) expenses[idx] = expense;
+    showToast(`✅ "${desc}" updated`);
+    const eid = editingId;
+    resetForm();
+    renderAll();
+    try {
+      await apiPost({ action: 'edit', ...expense });
+    } catch {
+      showToast('⚠️ Updated locally but failed to sync.');
+    }
+  } else {
+    expenses.unshift(expense);
+    resetForm();
+    renderAll();
+    showToast(`✅ "${desc}" added`);
+    try {
+      await apiPost({ action: 'add', ...expense });
+    } catch {
+      showToast('⚠️ Saved locally but failed to sync.');
+    }
   }
 });
 
@@ -453,13 +480,56 @@ function renderList() {
           <div class="expense-item-amount ${amountColor}">${fmt(ex.amount)}</div>
           <div class="expense-item-owed color-muted">${owedLabel}</div>
         </div>
-        <button class="delete-btn" data-id="${ex.id}" title="Delete expense">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-          </svg>
-        </button>
+        <div class="expense-actions" style="display:flex; gap:6px;">
+          <button class="edit-btn" data-id="${ex.id}" title="Edit expense" style="background:none; border:none; cursor:pointer; color:var(--text-muted);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+          </button>
+          <button class="delete-btn" data-id="${ex.id}" title="Delete expense">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+            </svg>
+          </button>
+        </div>
       </div>`;
   }).join('');
+
+  expenseList.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const id = btn.dataset.id;
+      const ex = expenses.find(x => String(x.id) === String(id));
+      if (!ex) return;
+      editingId = ex.id;
+      descInput.value = ex.desc;
+      amountInput.value = ex.amount;
+      dateInput.value = String(ex.date).substring(0, 10);
+      currentPayer = ex.payer;
+      document.querySelectorAll('#payerToggle .toggle-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.value === ex.payer);
+      });
+      currentSplit = ex.split;
+      document.querySelectorAll('.split-option').forEach(o => {
+        const input = o.querySelector('input');
+        if (input.value === ex.split) {
+          o.classList.add('active');
+          input.checked = true;
+        } else {
+          o.classList.remove('active');
+        }
+      });
+      selectedEmoji = ex.emoji;
+      document.querySelectorAll('.cat-pick-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.emoji === (ex.emoji || categoryIcon(ex.desc)));
+      });
+      updatePreview();
+      formTitle.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>\n            Edit Expense`;
+      submitBtnText.textContent = 'Save Changes';
+      cancelEditBtn.style.display = 'block';
+      document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth' });
+    });
+  });
 
   expenseList.querySelectorAll('.delete-btn').forEach(btn => {
     btn.addEventListener('click', async e => {

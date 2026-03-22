@@ -97,13 +97,12 @@ function doGet(e) {
       if (data.length <= 1) {
         return jsonResponse({ success: true, expenses: [] });
       }
-      const headers = data[0];
-      // Skip header, skip blank rows, skip SUMMARY rows
+      // Always map by HEADERS to ensure 'Emoji' and 'Category' are captured even if sheet is outdated
       const expenses = data.slice(1)
         .filter(row => row[0] && !String(row[0]).startsWith('SUMMARY') && row[0] !== '')
         .map(row => {
           const obj = {};
-          headers.forEach((h, i) => obj[h] = row[i]);
+          HEADERS.forEach((h, i) => obj[h] = row[i]);
           obj.Amount = parseFloat(obj.Amount) || 0;
           obj.AmountOwed = parseFloat(obj.AmountOwed) || 0;
           return obj;
@@ -143,6 +142,25 @@ function doPost(e) {
       sheet.appendRow(row);
       updateSummary(sheet);
       return jsonResponse({ success: true });
+    }
+
+    if (action === 'edit') {
+      const sheet = getOrCreateSheet();
+      const data = sheet.getDataRange().getValues();
+      const emoji = payload.emoji || '💰';
+      const category = GS_CAT_NAMES[emoji] || 'Other';
+      const newRow = [
+        payload.id, payload.date, payload.desc, payload.payer, 
+        payload.amount, payload.split, payload.amountOwed, emoji, category
+      ];
+      for (let i = data.length - 1; i >= 1; i--) {
+        if (String(data[i][0]) === String(payload.id)) {
+          sheet.getRange(i + 1, 1, 1, HEADERS.length).setValues([newRow]);
+          updateSummary(sheet);
+          return jsonResponse({ success: true });
+        }
+      }
+      return jsonResponse({ success: false, error: 'Row not found for edit' });
     }
 
     if (action === 'delete') {

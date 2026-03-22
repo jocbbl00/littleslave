@@ -133,7 +133,7 @@
 
         <!-- Add Expense Form -->
         <section class="card form-card">
-          <h2 class="card-title">
+          <h2 class="card-title" id="formTitle">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <circle cx="12" cy="12" r="10" />
               <line x1="12" y1="8" x2="12" y2="16" />
@@ -207,13 +207,16 @@
               <span class="preview-text" id="previewText"></span>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-full">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-              Add Expense
-            </button>
+            <div style="display: flex; gap: 8px;">
+              <button type="button" class="btn btn-ghost" id="cancelEditBtn" style="display:none; flex: 1;">Cancel</button>
+              <button type="submit" class="btn btn-primary btn-full" id="submitBtn" style="flex: 2;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" class="submit-icon" stroke="currentColor" stroke-width="2.5">
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+                <span id="submitBtnText">Add Expense</span>
+              </button>
+            </div>
           </form>
         </section>
 
