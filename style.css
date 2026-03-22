@@ -232,7 +232,7 @@ body {
 }
 .stats-row {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1px;
   background: var(--border);
   border-radius: var(--radius-md);
@@ -259,6 +259,7 @@ body {
   font-size: 18px;
   font-weight: 700;
   color: var(--text-primary);
+  word-break: break-word;
 }
 
 /* ─── Content Grid ─── */
@@ -269,10 +270,10 @@ body {
   align-items: start;
 }
 @media (max-width: 768px) {
-  .content-grid { grid-template-columns: 1fr; }
+  .content-grid { grid-template-columns: minmax(0, 1fr); width: 100%; max-width: 100vw; }
   .balance-card { padding: 24px 16px; }
-  .stats-row { grid-template-columns: repeat(2, 1fr); }
-  .balance-amount { font-size: 32px; }
+  .stats-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .balance-amount { font-size: 32px; word-break: break-word; }
   .avatar { width: 52px; height: 52px; font-size: 20px; }
   .main { padding: 16px 12px 60px; }
   .header-inner { padding: 0 12px; gap: 6px; }
@@ -285,7 +286,11 @@ body {
   .header-actions .btn { padding: 8px; font-size: 0; gap: 0; }
   .header-actions .btn svg { width: 20px; height: 20px; }
   
-  .expense-item { padding: 12px; gap: 10px; }
+  .expense-item { padding: 12px 10px; gap: 8px; flex-wrap: wrap; }
+  .expense-item-body { min-width: 0; flex: 1 1 100%; }
+  .expense-item-right { text-align: left; }
+  .expense-item-amount { font-size: 15px; }
+  .expense-actions { flex-shrink: 0; margin-left: auto; }
 }
 
 /* ─── Cards ─── */
@@ -537,7 +542,7 @@ body {
   color: var(--text-muted);
   margin-top: 3px;
 }
-.expense-item-right { text-align: right; flex-shrink: 0; }
+.expense-item-right { text-align: right; flex-shrink: 0; max-width: 160px; }
 .expense-item-amount {
   font-size: 16px;
   font-weight: 700;
@@ -545,6 +550,8 @@ body {
 .expense-item-owed {
   font-size: 11px;
   margin-top: 2px;
+  white-space: normal;
+  line-height: 1.25;
 }
 .delete-btn {
   background: none;
