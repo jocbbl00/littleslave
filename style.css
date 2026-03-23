@@ -93,11 +93,11 @@ body {
   gap: 10px;
 }
 .logo-icon {
-  font-size: 24px;
+  font-size: 32px;
   filter: drop-shadow(0 0 8px rgba(255,200,50,0.4));
 }
 .logo-text {
-  font-size: 20px;
+  font-size: 32px;
   font-weight: 700;
   background: linear-gradient(135deg, #fff 0%, var(--accent-light) 100%);
   -webkit-background-clip: text;
@@ -277,8 +277,8 @@ body {
   .avatar { width: 52px; height: 52px; font-size: 20px; }
   .main { padding: 16px 12px 60px; }
   .header-inner { padding: 0 12px; gap: 6px; }
-  .logo-icon { font-size: 20px; }
-  .logo-text { font-size: 15px; }
+  .logo-icon { font-size: 30px; }
+  .logo-text { font-size: 30px; }
   .card { padding: 20px 16px; }
   
   /* Shrink header buttons on mobile */
@@ -679,6 +679,9 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.7px;
 }
+.cat-chevron {
+  display: none;
+}
 /* ─── Period filter buttons ─── */
 .period-controls { display: flex; gap: 6px; flex-wrap: wrap; }
 .period-btn {
@@ -771,7 +774,26 @@ body {
 }
 @media (max-width: 768px) {
   .cat-body { flex-direction: column; align-items: center; }
-  .cat-header { flex-direction: column; align-items: flex-start; }
+  .cat-header { flex-direction: column; align-items: flex-start; width: 100%; }
+  .cat-title {
+    width: 100%;
+    justify-content: space-between;
+    padding: 10px 0;
+    cursor: pointer;
+  }
+  .cat-chevron {
+    display: block;
+    transition: transform 0.3s ease;
+  }
+  .cat-section.collapsed .cat-body,
+  .cat-section.collapsed .period-controls,
+  .cat-section.collapsed .custom-range {
+    display: none !important;
+  }
+  .cat-section.collapsed .cat-chevron {
+    transform: rotate(-90deg);
+  }
+  .period-controls { margin-top: 6px; }
 }
 
 /* ─── Inline Delete Confirmation ─── */

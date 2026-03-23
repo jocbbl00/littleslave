@@ -53,6 +53,19 @@ if (!API_URL || API_URL === 'PASTE_YOUR_APPS_SCRIPT_URL_HERE') {
 
 initCategoryControls();
 
+const catTitleToggle = document.getElementById('catTitleToggle');
+const catSection = document.getElementById('catSection');
+if (catTitleToggle && catSection) {
+  if (window.innerWidth <= 768) {
+    catSection.classList.add('collapsed');
+  }
+  catTitleToggle.addEventListener('click', () => {
+    if (window.innerWidth <= 768) {
+      catSection.classList.toggle('collapsed');
+    }
+  });
+}
+
 // ─── Auto-refresh every 30 seconds ───────
 setInterval(() => {
   if (API_URL && API_URL !== 'PASTE_YOUR_APPS_SCRIPT_URL_HERE') {
