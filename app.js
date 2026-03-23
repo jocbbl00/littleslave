@@ -467,7 +467,7 @@ function renderList() {
     const amountColor = isYarin ? 'color-green' : 'color-red';
     const owedLabel = ex.split === 'equal'
       ? `Paid by ${ex.payer} (50/50)`
-      : `Paid by ${ex.payer} (${otherPerson} owes full)`;
+      : `Paid by ${ex.payer} (Full)`;
 
     const emoji = ex.emoji || categoryIcon(ex.desc);
     const fallbackDesc = CAT_NAMES[emoji] || 'Expense';
