@@ -480,10 +480,10 @@ function renderList() {
           <div class="expense-item-body">
             <div class="expense-item-desc">${escHtml(displayDesc)}</div>
             <div class="expense-item-meta">${formatDate(ex.date)} · Paid by ${ex.payer}</div>
+            <div class="expense-item-owed color-muted">${owedLabel}</div>
           </div>
           <div class="expense-item-amounts">
             <div class="expense-item-amount ${amountColor}">${fmt(ex.amount)}</div>
-            <div class="expense-item-owed color-muted">${owedLabel}</div>
           </div>
         </div>
         <div class="expense-item-actions">
