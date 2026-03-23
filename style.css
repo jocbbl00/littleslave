@@ -285,13 +285,12 @@ body {
   .header-actions { gap: 4px; }
   .header-actions .btn { padding: 8px; font-size: 0; gap: 0; }
   .header-actions .btn svg { width: 20px; height: 20px; }
-  
-  .expense-item { flex-direction: column; align-items: stretch; padding: 16px 14px; gap: 14px; }
-  .expense-item-left { gap: 12px; }
-  .expense-item-right-wrapper { justify-content: space-between; padding-left: 54px; border-top: 1px solid rgba(255,255,255,0.04); padding-top: 12px; margin-top: -2px; width: 100%; }
-  .expense-item-right { text-align: left; }
-  .expense-item-amount { font-size: 17px; }
-  .delete-btn, .edit-btn { opacity: 1 !important; }
+  .expense-item { padding: 16px 14px; gap: 14px; }
+  .expense-item-icon { width: 36px; height: 36px; font-size: 14px; }
+  .expense-item-desc { font-size: 14px; }
+  .expense-item-amount { font-size: 16px; }
+  .expense-item-owed { font-size: 11px; }
+  .expense-item-actions { padding-top: 14px; }
 }
 
 /* ─── Cards ─── */
@@ -505,85 +504,87 @@ body {
 .empty-icon { font-size: 48px; margin-bottom: 12px; }
 .empty-state p { font-size: 14px; line-height: 1.8; }
 
-/* ─── Expense Item ─── */
+/* ─── Expense Item (Mobile First Desktop Enhanced) ─── */
 .expense-item {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  padding: 14px 16px;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
   background: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   transition: var(--transition);
   animation: slideIn 0.25s ease;
 }
-.expense-item-left {
+.expense-item:hover { border-color: rgba(255,255,255,0.1); background: var(--bg-card-hover); }
+
+.expense-item-main {
   display: flex;
   align-items: center;
   gap: 14px;
-  flex: 1;
-  min-width: 0;
 }
-.expense-item-right-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-shrink: 0;
-}
-@keyframes slideIn {
-  from { opacity: 0; transform: translateY(-8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.expense-item:hover { border-color: rgba(255,255,255,0.1); background: var(--bg-card-hover); }
 .expense-item-icon {
-  width: 40px; height: 40px;
+  width: 42px; height: 42px;
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-size: 16px;
+  font-size: 18px;
   flex-shrink: 0;
 }
 .expense-item-body { flex: 1; min-width: 0; }
 .expense-item-desc {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   color: var(--text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin-bottom: 3px;
 }
 .expense-item-meta {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-muted);
-  margin-top: 3px;
 }
-.expense-item-right { text-align: right; flex-shrink: 0; max-width: 160px; }
-.expense-item-amount {
-  font-size: 16px;
-  font-weight: 700;
-}
-.expense-item-owed {
-  font-size: 11px;
-  margin-top: 2px;
-  white-space: normal;
-  line-height: 1.25;
-}
-.delete-btn {
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  cursor: pointer;
-  padding: 6px;
-  border-radius: 6px;
-  transition: var(--transition);
+.expense-item-amounts { text-align: right; flex-shrink: 1; min-width: 0; padding-left: 8px; }
+.expense-item-amount { font-size: 17px; font-weight: 700; white-space: nowrap; }
+.expense-item-owed { font-size: 12px; margin-top: 2px; line-height: 1.3; color: var(--text-secondary); word-wrap: break-word; }
+
+.expense-item-actions {
   display: flex;
-  align-items: center;
-  flex-shrink: 0;
-  opacity: 0;
+  justify-content: center;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(255,255,255,0.06);
 }
-.expense-item:hover .delete-btn { opacity: 1; }
-.delete-btn:hover { color: var(--red); background: var(--red-soft); }
-.edit-btn:hover { color: var(--accent); background: var(--accent-glow); }
+.expense-btn {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center; flex: 1; gap: 6px;
+  font-size: 13px; font-weight: 600; font-family: inherit;
+  cursor: pointer; transition: var(--transition);
+}
+.expense-btn svg { width: 14px; height: 14px; }
+.expense-btn:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); border-color: rgba(255,255,255,0.15); }
+
+@media (min-width: 500px) {
+  .expense-item {
+    flex-direction: row;
+    align-items: center;
+    padding: 14px 18px;
+    gap: 16px;
+  }
+  .expense-item-main { flex: 1; min-width: 0; }
+  .expense-item-actions {
+    padding-top: 0; border-top: none;
+    align-items: center; justify-content: flex-end;
+  }
+  .expense-btn {
+    padding: 8px; font-size: 0; opacity: 0; flex: none; justify-content: center;
+  }
+  .expense-item:hover .expense-btn { opacity: 1; }
+}
 
 /* ─── Color states ─── */
 .color-green { color: var(--green); }

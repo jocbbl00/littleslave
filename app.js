@@ -469,32 +469,36 @@ function renderList() {
       ? `${otherPerson} owes ${fmt(ex.amountOwed)} (50/50)`
       : `${otherPerson} owes full ${fmt(ex.amountOwed)}`;
 
+    const emoji = ex.emoji || categoryIcon(ex.desc);
+    const fallbackDesc = CAT_NAMES[emoji] || 'Expense';
+    const displayDesc = ex.desc && ex.desc.trim().length > 0 ? ex.desc : fallbackDesc;
+
     return `
       <div class="expense-item" data-id="${ex.id}">
-        <div class="expense-item-left">
-          <div class="expense-item-icon ${iconBg}">${ex.emoji || categoryIcon(ex.desc)}</div>
+        <div class="expense-item-main">
+          <div class="expense-item-icon ${iconBg}">${emoji}</div>
           <div class="expense-item-body">
-            <div class="expense-item-desc">${escHtml(ex.desc)}</div>
+            <div class="expense-item-desc">${escHtml(displayDesc)}</div>
             <div class="expense-item-meta">${formatDate(ex.date)} · Paid by ${ex.payer}</div>
           </div>
-        </div>
-        <div class="expense-item-right-wrapper">
-          <div class="expense-item-right">
+          <div class="expense-item-amounts">
             <div class="expense-item-amount ${amountColor}">${fmt(ex.amount)}</div>
             <div class="expense-item-owed color-muted">${owedLabel}</div>
           </div>
-          <div class="expense-actions" style="display:flex; gap:10px;">
-            <button class="edit-btn" data-id="${ex.id}" title="Edit expense" style="background:rgba(255,255,255,0.05); border:none; cursor:pointer; color:var(--text-primary); padding: 10px; border-radius: 8px; display:flex;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-              </svg>
-            </button>
-            <button class="delete-btn" data-id="${ex.id}" title="Delete expense" style="background:rgba(255,255,255,0.05); border:none; cursor:pointer; color:var(--text-muted); padding: 10px; border-radius: 8px; display:flex;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-              </svg>
-            </button>
-          </div>
+        </div>
+        <div class="expense-item-actions">
+          <button class="expense-btn edit-btn" data-id="${ex.id}" title="Edit expense">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+            <span>Edit</span>
+          </button>
+          <button class="expense-btn delete-btn" data-id="${ex.id}" title="Delete expense">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+            </svg>
+            <span>Delete</span>
+          </button>
         </div>
       </div>`;
   }).join('');
