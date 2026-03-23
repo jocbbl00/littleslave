@@ -99,7 +99,6 @@ body {
 .logo-text {
   font-size: 28px;
   font-weight: 700;
-  font-family: "Wawati TC", "Yuppy TC", "Chalkboard SE", "Comic Sans MS", cursive, sans-serif;
   background: linear-gradient(135deg, #fff 0%, var(--accent-light) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
