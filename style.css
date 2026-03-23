@@ -286,11 +286,12 @@ body {
   .header-actions .btn { padding: 8px; font-size: 0; gap: 0; }
   .header-actions .btn svg { width: 20px; height: 20px; }
   
-  .expense-item { padding: 12px 10px; gap: 8px; flex-wrap: wrap; }
-  .expense-item-body { min-width: 0; flex: 1 1 100%; }
+  .expense-item { flex-direction: column; align-items: stretch; padding: 16px 14px; gap: 14px; }
+  .expense-item-left { gap: 12px; }
+  .expense-item-right-wrapper { justify-content: space-between; padding-left: 54px; border-top: 1px solid rgba(255,255,255,0.04); padding-top: 12px; margin-top: -2px; width: 100%; }
   .expense-item-right { text-align: left; }
-  .expense-item-amount { font-size: 15px; }
-  .expense-actions { flex-shrink: 0; margin-left: auto; }
+  .expense-item-amount { font-size: 17px; }
+  .delete-btn, .edit-btn { opacity: 1 !important; }
 }
 
 /* ─── Cards ─── */
@@ -508,6 +509,7 @@ body {
 .expense-item {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 14px;
   padding: 14px 16px;
   background: var(--bg-surface);
@@ -515,6 +517,19 @@ body {
   border-radius: var(--radius-md);
   transition: var(--transition);
   animation: slideIn 0.25s ease;
+}
+.expense-item-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+  min-width: 0;
+}
+.expense-item-right-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
 }
 @keyframes slideIn {
   from { opacity: 0; transform: translateY(-8px); }
@@ -568,6 +583,7 @@ body {
 }
 .expense-item:hover .delete-btn { opacity: 1; }
 .delete-btn:hover { color: var(--red); background: var(--red-soft); }
+.edit-btn:hover { color: var(--accent); background: var(--accent-glow); }
 
 /* ─── Color states ─── */
 .color-green { color: var(--green); }
