@@ -466,8 +466,8 @@ function renderList() {
     const iconBg = isYarin ? 'bg-purple' : 'bg-green';
     const amountColor = isYarin ? 'color-green' : 'color-red';
     const owedLabel = ex.split === 'equal'
-      ? `${otherPerson} owes ${fmt(ex.amountOwed)} (50/50)`
-      : `${otherPerson} owes full ${fmt(ex.amountOwed)}`;
+      ? `Paid by ${ex.payer} (50/50)`
+      : `Paid by ${ex.payer} (${otherPerson} owes full)`;
 
     const emoji = ex.emoji || categoryIcon(ex.desc);
     const fallbackDesc = CAT_NAMES[emoji] || 'Expense';
@@ -479,7 +479,7 @@ function renderList() {
           <div class="expense-item-icon ${iconBg}">${emoji}</div>
           <div class="expense-item-body">
             <div class="expense-item-desc">${escHtml(displayDesc)}</div>
-            <div class="expense-item-meta">${formatDate(ex.date)} · Paid by ${ex.payer}</div>
+            <div class="expense-item-meta">${formatDate(ex.date)}</div>
             <div class="expense-item-owed color-muted">${owedLabel}</div>
           </div>
           <div class="expense-item-amounts">
