@@ -120,7 +120,7 @@ function resetForm() {
   document.querySelectorAll('.cat-pick-btn').forEach(b => b.classList.remove('active'));
   cancelEditBtn.style.display = 'none';
   submitBtnText.textContent = 'Add Expense';
-  formTitle.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>\n            Add Expense`;
+  formTitle.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 3h18"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M3 21h18"/></svg>\n            Add Expense`;
 }
 
 if (cancelEditBtn) {
