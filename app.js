@@ -376,7 +376,16 @@ function renderCategoryStats() {
   const grid = document.getElementById('catGrid');
   const pieTotal = document.getElementById('pieTotal');
 
-  if (expenses.length === 0) { section.style.display = 'none'; return; }
+  if (expenses.length === 0) {
+    // Show empty state
+    section.style.display = 'block';
+    const canvas = document.getElementById('pieChart');
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieTotal.innerHTML = '';
+    grid.innerHTML = '<div class="empty-state" style="padding: 10px 0;width:100%;"><p>No expenses yet to show breakdown.</p></div>';
+    return;
+  }
   section.style.display = 'block';
 
   const filtered = getFilteredExpenses();
