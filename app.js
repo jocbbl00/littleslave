@@ -233,14 +233,23 @@ async function loadFromSheets(silent = false) {
       expenses = data.expenses.map(ex => ({
         id: ex.ID,
         date: ex.Date,
-        desc: ex.Description,
+        // Sheets stores purely-numeric descriptions (e.g. "911") as Number,
+        // so coerce to string here to keep downstream string ops safe.
+        desc: ex.Description != null ? String(ex.Description) : '',
         payer: ex.Payer,
         amount: parseFloat(ex.Amount),
         split: ex.SplitType,
         amountOwed: parseFloat(ex.AmountOwed),
         emoji: ex.Emoji || '',
       }));
-      renderAll();
+      try {
+        renderAll();
+      } catch (renderErr) {
+        // Don't let a render bug masquerade as a network failure.
+        console.error('Render failed after successful fetch:', renderErr);
+        if (!silent) showToast('⚠️ Loaded data but failed to render. See console.');
+        return;
+      }
       if (!silent) showToast('🔄 Data synced from Google Sheets');
     } else {
       if (!silent) showToast('⚠️ Could not load data: ' + (data.error || 'Unknown error'));
@@ -493,7 +502,8 @@ function renderList() {
 
     const emoji = ex.emoji || categoryIcon(ex.desc);
     const fallbackDesc = CAT_NAMES[emoji] || 'Expense';
-    const displayDesc = ex.desc && ex.desc.trim().length > 0 ? ex.desc : fallbackDesc;
+    const descStr = ex.desc != null ? String(ex.desc) : '';
+    const displayDesc = descStr.trim().length > 0 ? descStr : fallbackDesc;
 
     return `
       <div class="expense-item" data-id="${ex.id}">
